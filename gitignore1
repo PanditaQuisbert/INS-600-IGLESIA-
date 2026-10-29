@@ -3,7 +3,7 @@
 # ============================================
 
 # Variables de entorno (NUNCA commitear secretos)
-.env
+env
 .env.local
 .env.production
 .env.*.local
