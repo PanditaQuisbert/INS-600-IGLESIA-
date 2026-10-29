@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iglesia Vida Nueva - Un lugar para crecer en fe</title>
-    <meta name="description" content="Iglesia Vida Nueva - Una comunidad de fe donde puedes crecer espiritualmente. Únete a nuestros servicios y eventos.">
+    <meta name="description" content="Iglesia Vida Nueva - Una comunidad de fe donde puedes crecer espiritualmente. Únete a nuestros servicios, eventos y ministerios.">
+    <meta name="keywords" content="iglesia, cristiana, fe, Dios, Jesús, oración, biblia, sermones, eventos">
+    <meta name="author" content="Iglesia Vida Nueva">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Iglesia Vida Nueva">
+    <meta property="og:description" content="Una comunidad de fe donde puedes crecer espiritualmente">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vidanueva.org">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,30 +34,24 @@
                         serif: ['Playfair Display', 'serif']
                     },
                     colors: {
-                        primary: {
-                            50: '#fef9e7',
-                            100: '#fdf3c4',
-                            200: '#fbe58a',
-                            300: '#f9d24f',
-                            400: '#f6c026',
-                            500: '#e6a817',
-                            600: '#c48410',
-                            700: '#9c5f0f',
-                            800: '#7e4b14',
-                            900: '#6a3e16',
-                        },
                         church: {
+                            gold: '#d4af37',
+                            goldLight: '#f4d03f',
                             dark: '#1a2332',
                             deep: '#2c3e50',
-                            gold: '#d4af37',
+                            blue: '#34495e',
                             cream: '#f8f4e9',
+                            beige: '#e8dfd3',
                         }
                     },
                     animation: {
                         'fade-in': 'fadeIn 0.8s ease-out',
                         'slide-up': 'slideUp 0.8s ease-out',
+                        'slide-down': 'slideDown 0.5s ease-out',
                         'float': 'float 4s ease-in-out infinite',
                         'pulse-slow': 'pulse 3s ease-in-out infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'bounce-gentle': 'bounceGentle 2s ease-in-out infinite',
                     },
                     keyframes: {
                         fadeIn: {
@@ -60,9 +62,17 @@
                             '0%': { opacity: '0', transform: 'translateY(40px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' }
                         },
+                        slideDown: {
+                            '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-15px)' }
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' }
                         }
                     }
                 }
@@ -71,6 +81,12 @@
     </script>
     
     <style>
+        :root {
+            --church-gold: #d4af37;
+            --church-dark: #1a2332;
+            --church-cream: #f8f4e9;
+        }
+        
         .gradient-gold {
             background: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
         }
@@ -115,9 +131,152 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
+        
+        /* Loader */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--church-dark);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-cross {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .loader-cross::before,
+        .loader-cross::after {
+            content: '';
+            position: absolute;
+            background: var(--church-gold);
+            border-radius: 4px;
+        }
+        .loader-cross::before {
+            width: 12px;
+            height: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .loader-cross::after {
+            width: 40px;
+            height: 12px;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Scroll spy */
+        .nav-link.active {
+            color: var(--church-gold);
+            position: relative;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--church-gold);
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+        
+        /* Audio player */
+        .audio-progress {
+            transition: width 0.1s linear;
+        }
+        
+        /* Testimonial carousel */
+        .testimonial-track {
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--church-cream);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--church-gold);
+            border-radius: 5px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: var(--church-dark);
+        }
+        
+        /* Reveal on scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Verse of the day */
+        .verse-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(26, 35, 50, 0.05) 100%);
+            border-left: 4px solid var(--church-gold);
+        }
+        .dark .verse-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(26, 35, 50, 0.3) 100%);
+        }
+        
+        /* Event calendar */
+        .event-date {
+            background: linear-gradient(135deg, var(--church-gold) 0%, var(--church-goldLight) 100%);
+        }
+        
+        /* Blog card */
+        .blog-card:hover .blog-image {
+            transform: scale(1.1);
+        }
+        .blog-image {
+            transition: transform 0.6s ease;
+        }
     </style>
 </head>
 <body class="bg-church-cream dark:bg-gray-900 font-sans transition-colors duration-300">
+
+    <!-- Loader -->
+    <div id="loader" class="loader">
+        <div class="text-center">
+            <div class="loader-cross mx-auto mb-4"></div>
+            <p class="text-church-gold font-serif text-xl">Cargando...</p>
+        </div>
+    </div>
 
     <!-- Header / Navbar -->
     <header class="sticky top-0 z-50 bg-white/95 dark:bg-church-dark/95 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-gray-800">
@@ -136,29 +295,26 @@
 
                 <!-- Nav Links (desktop) -->
                 <ul class="hidden lg:flex items-center space-x-8">
-                    <li><a href="#inicio" class="text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Inicio</a></li>
-                    <li><a href="#nosotros" class="text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Nosotros</a></li>
-                    <li><a href="#servicios" class="text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Servicios</a></li>
-                    <li><a href="#eventos" class="text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Eventos</a></li>
-                    <li><a href="#ministerios" class="text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Ministerios</a></li>
-                    <li><a href="#sermones" class="text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Sermones</a></li>
-                    <li><a href="#contacto" class="text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Contacto</a></li>
+                    <li><a href="#inicio" class="nav-link text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Inicio</a></li>
+                    <li><a href="#nosotros" class="nav-link text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Nosotros</a></li>
+                    <li><a href="#servicios" class="nav-link text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Servicios</a></li>
+                    <li><a href="#eventos" class="nav-link text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Eventos</a></li>
+                    <li><a href="#sermones" class="nav-link text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Sermones</a></li>
+                    <li><a href="#blog" class="nav-link text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Blog</a></li>
+                    <li><a href="#contacto" class="nav-link text-gray-700 dark:text-gray-200 hover:text-church-gold dark:hover:text-church-gold font-medium transition">Contacto</a></li>
                 </ul>
 
                 <!-- Actions -->
                 <div class="flex items-center space-x-3">
-                    <!-- Dark mode toggle -->
                     <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                         <i class="fas fa-moon text-gray-700 dark:hidden"></i>
                         <i class="fas fa-sun text-church-gold hidden dark:inline"></i>
                     </button>
 
-                    <!-- Donar button -->
                     <a href="#donaciones" class="hidden md:inline-flex items-center gradient-gold text-white px-5 py-2 rounded-full font-semibold hover:opacity-90 transition shadow-md">
                         <i class="fas fa-heart mr-2"></i>Donar
                     </a>
 
-                    <!-- Mobile menu button -->
                     <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                         <i class="fas fa-bars text-gray-700 dark:text-gray-200"></i>
                     </button>
@@ -171,8 +327,8 @@
                 <li><a href="#nosotros" class="block py-2 text-gray-700 dark:text-gray-200 hover:text-church-gold">Nosotros</a></li>
                 <li><a href="#servicios" class="block py-2 text-gray-700 dark:text-gray-200 hover:text-church-gold">Servicios</a></li>
                 <li><a href="#eventos" class="block py-2 text-gray-700 dark:text-gray-200 hover:text-church-gold">Eventos</a></li>
-                <li><a href="#ministerios" class="block py-2 text-gray-700 dark:text-gray-200 hover:text-church-gold">Ministerios</a></li>
                 <li><a href="#sermones" class="block py-2 text-gray-700 dark:text-gray-200 hover:text-church-gold">Sermones</a></li>
+                <li><a href="#blog" class="block py-2 text-gray-700 dark:text-gray-200 hover:text-church-gold">Blog</a></li>
                 <li><a href="#contacto" class="block py-2 text-gray-700 dark:text-gray-200 hover:text-church-gold">Contacto</a></li>
                 <li><a href="#donaciones" class="block py-2 text-church-gold font-semibold">💝 Donar</a></li>
             </ul>
@@ -204,30 +360,49 @@
                 <!-- Stats -->
                 <div class="grid grid-cols-3 gap-6 mt-16 max-w-lg">
                     <div class="border-l-2 border-church-gold pl-4">
-                        <div class="text-3xl font-bold text-church-gold">25+</div>
+                        <div class="text-3xl font-bold text-church-gold counter" data-target="25">0</div>
                         <div class="text-sm text-gray-300">Años sirviendo</div>
                     </div>
                     <div class="border-l-2 border-church-gold pl-4">
-                        <div class="text-3xl font-bold text-church-gold">1.5K</div>
+                        <div class="text-3xl font-bold text-church-gold counter" data-target="1500">0</div>
                         <div class="text-sm text-gray-300">Miembros</div>
                     </div>
                     <div class="border-l-2 border-church-gold pl-4">
-                        <div class="text-3xl font-bold text-church-gold">12</div>
+                        <div class="text-3xl font-bold text-church-gold counter" data-target="12">0</div>
                         <div class="text-sm text-gray-300">Ministerios</div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Scroll indicator -->
         <div class="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-indicator">
             <i class="fas fa-chevron-down text-church-gold text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- Versículo del Día -->
+    <section class="py-12 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="verse-card rounded-2xl p-8 max-w-4xl mx-auto reveal">
+                <div class="flex items-start space-x-4">
+                    <div class="w-16 h-16 gradient-gold rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-book-bible text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs text-church-gold font-semibold uppercase tracking-wider">Versículo del Día</span>
+                        <blockquote class="text-xl md:text-2xl font-serif italic text-church-dark dark:text-white mt-2 mb-3 leading-relaxed">
+                            "Todo lo puedo en Cristo que me fortalece."
+                        </blockquote>
+                        <cite class="text-church-gold font-semibold not-italic">— Filipenses 4:13</cite>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Horarios de Servicios -->
     <section id="servicios" class="py-20 bg-white dark:bg-gray-800">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12 reveal">
                 <span class="text-church-gold font-semibold uppercase tracking-wider">Únete a nosotros</span>
                 <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-4">
                     Horarios de <span class="gradient-text">Servicios</span>
@@ -238,8 +413,7 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <!-- Servicio 1 -->
-                <div class="card-hover bg-gradient-to-br from-church-cream to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl p-8 text-center border-2 border-transparent hover:border-church-gold shadow-md">
+                <div class="card-hover bg-gradient-to-br from-church-cream to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl p-8 text-center border-2 border-transparent hover:border-church-gold shadow-md reveal">
                     <div class="w-20 h-20 gradient-gold rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <i class="fas fa-sun text-white text-3xl"></i>
                     </div>
@@ -261,8 +435,7 @@
                     </div>
                 </div>
 
-                <!-- Servicio 2 -->
-                <div class="card-hover bg-gradient-to-br from-church-cream to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl p-8 text-center border-2 border-transparent hover:border-church-gold shadow-md">
+                <div class="card-hover bg-gradient-to-br from-church-cream to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl p-8 text-center border-2 border-transparent hover:border-church-gold shadow-md reveal">
                     <div class="w-20 h-20 gradient-gold rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <i class="fas fa-book-bible text-white text-3xl"></i>
                     </div>
@@ -284,8 +457,7 @@
                     </div>
                 </div>
 
-                <!-- Servicio 3 -->
-                <div class="card-hover bg-gradient-to-br from-church-cream to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl p-8 text-center border-2 border-transparent hover:border-church-gold shadow-md">
+                <div class="card-hover bg-gradient-to-br from-church-cream to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl p-8 text-center border-2 border-transparent hover:border-church-gold shadow-md reveal">
                     <div class="w-20 h-20 gradient-gold rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <i class="fas fa-pray text-white text-3xl"></i>
                     </div>
@@ -314,7 +486,7 @@
     <section id="nosotros" class="py-20 bg-church-cream dark:bg-gray-900">
         <div class="container mx-auto px-4">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="relative">
+                <div class="relative reveal">
                     <div class="grid grid-cols-2 gap-4">
                         <img src="https://images.unsplash.com/photo-1529070538774-1783cb168ae5?w=400&h=500&fit=crop" 
                              alt="Comunidad" class="rounded-2xl shadow-xl w-full h-64 object-cover">
@@ -325,7 +497,6 @@
                         <img src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=400&h=500&fit=crop" 
                              alt="Oración" class="rounded-2xl shadow-xl w-full h-64 object-cover mt-8">
                     </div>
-                    <!-- Badge flotante -->
                     <div class="absolute -bottom-6 -right-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 hidden md:block">
                         <div class="flex items-center space-x-3">
                             <div class="w-14 h-14 gradient-gold rounded-full flex items-center justify-center">
@@ -339,7 +510,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="reveal">
                     <span class="text-church-gold font-semibold uppercase tracking-wider">Quiénes somos</span>
                     <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-6">
                         Una familia <span class="gradient-text">unida en Cristo</span>
@@ -348,7 +519,6 @@
                         Somos una comunidad de creyentes apasionados por Dios, comprometidos con compartir el amor de Cristo y hacer discípulos en nuestra ciudad y más allá.
                     </p>
                     
-                    <!-- Misión y Visión -->
                     <div class="space-y-4 mb-8">
                         <div class="flex items-start space-x-4">
                             <div class="w-12 h-12 gradient-gold rounded-full flex items-center justify-center flex-shrink-0">
@@ -387,21 +557,10 @@
         </div>
     </section>
 
-    <!-- Versículo destacado -->
-    <section class="verse-bg py-20 text-white">
-        <div class="container mx-auto px-4 text-center max-w-4xl">
-            <i class="fas fa-quote-left text-church-gold text-5xl mb-6"></i>
-            <blockquote class="text-2xl md:text-4xl font-serif italic leading-relaxed mb-6">
-                "Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar."
-            </blockquote>
-            <cite class="text-church-gold font-semibold text-xl not-italic">— Mateo 11:28</cite>
-        </div>
-    </section>
-
-    <!-- Próximos Eventos -->
+    <!-- Eventos con Calendario -->
     <section id="eventos" class="py-20 bg-white dark:bg-gray-800">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12 reveal">
                 <span class="text-church-gold font-semibold uppercase tracking-wider">Agenda</span>
                 <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-4">
                     Próximos <span class="gradient-text">Eventos</span>
@@ -411,367 +570,225 @@
                 </p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Evento 1 -->
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl overflow-hidden shadow-md">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=400&fit=crop" 
-                             alt="Retiro juvenil" class="w-full h-full object-cover">
-                        <div class="absolute top-4 left-4 bg-white dark:bg-gray-800 rounded-xl p-3 text-center shadow-lg">
-                            <div class="text-2xl font-bold text-church-dark dark:text-white leading-none">15</div>
-                            <div class="text-xs text-church-gold font-semibold uppercase">Nov</div>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs bg-church-gold/20 text-church-gold px-3 py-1 rounded-full font-semibold">Juventud</span>
-                        <h3 class="text-xl font-bold text-church-dark dark:text-white mt-3 mb-2">Retiro Juvenil 2026</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Tres días de renovación espiritual, alabanza y comunión para jóvenes de 15 a 25 años.</p>
-                        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
-                            <i class="fas fa-map-marker-alt mr-2 text-church-gold"></i>
-                            <span>Centro de Retiros El Manantial</span>
-                        </div>
-                        <a href="#" class="text-church-gold font-semibold hover:underline">Más información →</a>
-                    </div>
-                </div>
-
-                <!-- Evento 2 -->
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl overflow-hidden shadow-md">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&h=400&fit=crop" 
-                             alt="Conferencia" class="w-full h-full object-cover">
-                        <div class="absolute top-4 left-4 bg-white dark:bg-gray-800 rounded-xl p-3 text-center shadow-lg">
-                            <div class="text-2xl font-bold text-church-dark dark:text-white leading-none">22</div>
-                            <div class="text-xs text-church-gold font-semibold uppercase">Nov</div>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs bg-church-gold/20 text-church-gold px-3 py-1 rounded-full font-semibold">Conferencia</span>
-                        <h3 class="text-xl font-bold text-church-dark dark:text-white mt-3 mb-2">Conferencia de Familias</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Una noche especial para fortalecer los matrimonios y las familias con la Palabra de Dios.</p>
-                        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
-                            <i class="fas fa-map-marker-alt mr-2 text-church-gold"></i>
-                            <span>Templo Principal</span>
-                        </div>
-                        <a href="#" class="text-church-gold font-semibold hover:underline">Más información →</a>
-                    </div>
-                </div>
-
-                <!-- Evento 3 -->
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl overflow-hidden shadow-md">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop" 
-                             alt="Bautismos" class="w-full h-full object-cover">
-                        <div class="absolute top-4 left-4 bg-white dark:bg-gray-800 rounded-xl p-3 text-center shadow-lg">
-                            <div class="text-2xl font-bold text-church-dark dark:text-white leading-none">01</div>
-                            <div class="text-xs text-church-gold font-semibold uppercase">Dic</div>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs bg-church-gold/20 text-church-gold px-3 py-1 rounded-full font-semibold">Especial</span>
-                        <h3 class="text-xl font-bold text-church-dark dark:text-white mt-3 mb-2">Servicio de Bautismos</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Celebramos con quienes han tomado la decisión de seguir a Cristo públicamente.</p>
-                        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
-                            <i class="fas fa-map-marker-alt mr-2 text-church-gold"></i>
-                            <span>Templo Principal</span>
-                        </div>
-                        <a href="#" class="text-church-gold font-semibold hover:underline">Más información →</a>
-                    </div>
-                </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="eventsGrid">
+                <!-- Eventos generados por JS -->
             </div>
         </div>
     </section>
 
     <!-- Ministerios -->
-    <section id="ministerios" class="py-20 bg-church-cream dark:bg-gray-900">
+    <section class="py-20 bg-church-cream dark:bg-gray-900">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12 reveal">
                 <span class="text-church-gold font-semibold uppercase tracking-wider">Sirve con nosotros</span>
                 <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-4">
                     Nuestros <span class="gradient-text">Ministerios</span>
                 </h2>
-                <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-                    Encuentra tu lugar para servir y crecer. Hay un ministerio para ti
-                </p>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md">
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md reveal">
                     <div class="w-16 h-16 mx-auto mb-4 gradient-gold rounded-2xl flex items-center justify-center">
                         <i class="fas fa-child text-white text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-church-dark dark:text-white mb-1">Niños</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Edades 3-12</p>
                 </div>
-                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md">
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md reveal">
                     <div class="w-16 h-16 mx-auto mb-4 gradient-gold rounded-2xl flex items-center justify-center">
                         <i class="fas fa-user-graduate text-white text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-church-dark dark:text-white mb-1">Adolescentes</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Edades 13-17</p>
                 </div>
-                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md">
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md reveal">
                     <div class="w-16 h-16 mx-auto mb-4 gradient-gold rounded-2xl flex items-center justify-center">
                         <i class="fas fa-users text-white text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-church-dark dark:text-white mb-1">Jóvenes</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Edades 18-30</p>
                 </div>
-                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md">
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md reveal">
                     <div class="w-16 h-16 mx-auto mb-4 gradient-gold rounded-2xl flex items-center justify-center">
                         <i class="fas fa-ring text-white text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-church-dark dark:text-white mb-1">Matrimonios</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Familias</p>
                 </div>
-                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md">
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md reveal">
                     <div class="w-16 h-16 mx-auto mb-4 gradient-gold rounded-2xl flex items-center justify-center">
                         <i class="fas fa-music text-white text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-church-dark dark:text-white mb-1">Alabanza</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Música y adoración</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Música</p>
                 </div>
-                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md">
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md reveal">
                     <div class="w-16 h-16 mx-auto mb-4 gradient-gold rounded-2xl flex items-center justify-center">
                         <i class="fas fa-hands-helping text-white text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-church-dark dark:text-white mb-1">Ayuda Social</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Servicio comunitario</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Comunidad</p>
                 </div>
-                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md">
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md reveal">
                     <div class="w-16 h-16 mx-auto mb-4 gradient-gold rounded-2xl flex items-center justify-center">
                         <i class="fas fa-globe-americas text-white text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-church-dark dark:text-white mb-1">Misiones</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Alcanzando naciones</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Naciones</p>
                 </div>
-                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md">
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-md reveal">
                     <div class="w-16 h-16 mx-auto mb-4 gradient-gold rounded-2xl flex items-center justify-center">
                         <i class="fas fa-female text-white text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-church-dark dark:text-white mb-1">Mujeres</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Comunidad femenina</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Comunidad</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Sermones Recientes -->
+    <!-- Sermones con Reproductor -->
     <section id="sermones" class="py-20 bg-white dark:bg-gray-800">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
-                <div>
-                    <span class="text-church-gold font-semibold uppercase tracking-wider">Palabra de Dios</span>
-                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2">
-                        Sermones <span class="gradient-text">Recientes</span>
-                    </h2>
-                </div>
-                <a href="#" class="mt-4 md:mt-0 text-church-gold font-semibold hover:underline">
-                    Ver todos los sermones <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-            </div>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Sermón 1 -->
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl overflow-hidden shadow-md">
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=600&h=400&fit=crop" 
-                             alt="Sermón" class="w-full h-48 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-center">
-                            <button class="w-16 h-16 bg-church-gold rounded-full flex items-center justify-center hover:scale-110 transition shadow-xl">
-                                <i class="fas fa-play text-white text-xl ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                            <i class="far fa-calendar mr-2"></i>
-                            <span>Octubre 19, 2026</span>
-                            <span class="mx-2">•</span>
-                            <span>45 min</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-church-dark dark:text-white mb-2">Caminando en Fe</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">Pastor Juan Rodríguez</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">Aprende cómo la fe puede transformar cada área de tu vida diaria.</p>
-                    </div>
-                </div>
-
-                <!-- Sermón 2 -->
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl overflow-hidden shadow-md">
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1455849318743-b2233052fcff?w=600&h=400&fit=crop" 
-                             alt="Sermón" class="w-full h-48 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-center">
-                            <button class="w-16 h-16 bg-church-gold rounded-full flex items-center justify-center hover:scale-110 transition shadow-xl">
-                                <i class="fas fa-play text-white text-xl ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                            <i class="far fa-calendar mr-2"></i>
-                            <span>Octubre 12, 2026</span>
-                            <span class="mx-2">•</span>
-                            <span>50 min</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-church-dark dark:text-white mb-2">El Poder de la Oración</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">Pastora María López</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">Descubre el poder transformador de una vida de oración constante.</p>
-                    </div>
-                </div>
-
-                <!-- Sermón 3 -->
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl overflow-hidden shadow-md">
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=600&h=400&fit=crop" 
-                             alt="Sermón" class="w-full h-48 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-center">
-                            <button class="w-16 h-16 bg-church-gold rounded-full flex items-center justify-center hover:scale-110 transition shadow-xl">
-                                <i class="fas fa-play text-white text-xl ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                            <i class="far fa-calendar mr-2"></i>
-                            <span>Octubre 5, 2026</span>
-                            <span class="mx-2">•</span>
-                            <span>42 min</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-church-dark dark:text-white mb-2">Amor Incondicional</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">Pastor Juan Rodríguez</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">Experimenta el amor de Dios que todo lo puede y todo lo transforma.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pastores / Liderazgo -->
-    <section class="py-20 bg-church-cream dark:bg-gray-900">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <span class="text-church-gold font-semibold uppercase tracking-wider">Nuestro equipo</span>
+            <div class="text-center mb-12 reveal">
+                <span class="text-church-gold font-semibold uppercase tracking-wider">Palabra de Dios</span>
                 <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-4">
-                    Conoce a nuestros <span class="gradient-text">Pastores</span>
+                    Sermones <span class="gradient-text">Recientes</span>
                 </h2>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <div class="card-hover text-center">
-                    <div class="relative mb-6 overflow-hidden rounded-2xl">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop" 
-                             alt="Pastor Principal" class="w-full h-80 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-church-dark/80 to-transparent flex items-end justify-center pb-6">
-                            <div class="flex space-x-3">
-                                <a href="#" class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-church-gold transition">
-                                    <i class="fab fa-facebook-f text-white"></i>
-                                </a>
-                                <a href="#" class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-church-gold transition">
-                                    <i class="fab fa-instagram text-white"></i>
-                                </a>
-                            </div>
+            <!-- Reproductor de Audio -->
+            <div class="max-w-4xl mx-auto mb-12 reveal">
+                <div class="bg-gradient-to-r from-church-dark to-church-deep rounded-2xl p-6 text-white shadow-xl">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <button id="playBtn" class="w-16 h-16 gradient-gold rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg">
+                            <i class="fas fa-play text-white text-xl ml-1"></i>
+                        </button>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg" id="currentSermonTitle">Caminando en Fe</h3>
+                            <p class="text-sm text-gray-300">Pastor Juan Rodríguez</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-300" id="currentTime">0:00</div>
+                            <div class="text-xs text-gray-400" id="totalTime">45:00</div>
                         </div>
                     </div>
-                    <h3 class="text-2xl font-serif font-bold text-church-dark dark:text-white">Pastor Juan Rodríguez</h3>
-                    <p class="text-church-gold font-semibold">Pastor Principal</p>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">25 años sirviendo al Señor</p>
+                    <div class="relative">
+                        <div class="w-full bg-white/20 rounded-full h-2">
+                            <div id="progressBar" class="audio-progress gradient-gold h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-4 text-sm">
+                        <button class="hover:text-church-gold transition"><i class="fas fa-backward"></i></button>
+                        <button class="hover:text-church-gold transition"><i class="fas fa-volume-up"></i></button>
+                        <button class="hover:text-church-gold transition"><i class="fas fa-forward"></i></button>
+                    </div>
                 </div>
+            </div>
 
-                <div class="card-hover text-center">
-                    <div class="relative mb-6 overflow-hidden rounded-2xl">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop" 
-                             alt="Pastora" class="w-full h-80 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-church-dark/80 to-transparent flex items-end justify-center pb-6">
-                            <div class="flex space-x-3">
-                                <a href="#" class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-church-gold transition">
-                                    <i class="fab fa-facebook-f text-white"></i>
-                                </a>
-                                <a href="#" class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-church-gold transition">
-                                    <i class="fab fa-instagram text-white"></i>
-                                </a>
-                            </div>
-                        </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="sermonsGrid">
+                <!-- Sermones generados por JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog / Devocionales -->
+    <section id="blog" class="py-20 bg-church-cream dark:bg-gray-900">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 reveal">
+                <span class="text-church-gold font-semibold uppercase tracking-wider">Artículos y reflexiones</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-4">
+                    Blog <span class="gradient-text">Devocional</span>
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6" id="blogGrid">
+                <!-- Blog posts generados por JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería con Lightbox -->
+    <section class="py-20 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 reveal">
+                <span class="text-church-gold font-semibold uppercase tracking-wider">Momentos especiales</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-4">
+                    Nuestra <span class="gradient-text">Galería</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="relative group overflow-hidden rounded-2xl shadow-lg col-span-2 row-span-2 cursor-pointer gallery-item" data-src="https://images.unsplash.com/photo-1529070538774-1783cb168ae5?w=1200&h=1200&fit=crop">
+                    <img src="https://images.unsplash.com/photo-1529070538774-1783cb168ae5?w=600&h=600&fit=crop" 
+                         alt="Galería" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-church-dark/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-2xl font-serif font-bold text-church-dark dark:text-white">Pastora María López</h3>
-                    <p class="text-church-gold font-semibold">Co-Pastora</p>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Ministerio de mujeres</p>
                 </div>
-
-                <div class="card-hover text-center">
-                    <div class="relative mb-6 overflow-hidden rounded-2xl">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop" 
-                             alt="Pastor Asociado" class="w-full h-80 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-church-dark/80 to-transparent flex items-end justify-center pb-6">
-                            <div class="flex space-x-3">
-                                <a href="#" class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-church-gold transition">
-                                    <i class="fab fa-facebook-f text-white"></i>
-                                </a>
-                                <a href="#" class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-church-gold transition">
-                                    <i class="fab fa-instagram text-white"></i>
-                                </a>
-                            </div>
-                        </div>
+                <div class="relative group overflow-hidden rounded-2xl shadow-lg cursor-pointer gallery-item" data-src="https://images.unsplash.com/photo-1519491050282-cf00c82424b4?w=800&h=800&fit=crop">
+                    <img src="https://images.unsplash.com/photo-1519491050282-cf00c82424b4?w=400&h=400&fit=crop" 
+                         alt="Galería" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-church-dark/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-serif font-bold text-church-dark dark:text-white">Pastor Carlos Méndez</h3>
-                    <p class="text-church-gold font-semibold">Pastor de Jóvenes</p>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Ministerio juvenil</p>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl shadow-lg cursor-pointer gallery-item" data-src="https://images.unsplash.com/photo-1545124915-7062a8a17802?w=800&h=800&fit=crop">
+                    <img src="https://images.unsplash.com/photo-1545124915-7062a8a17802?w=400&h=400&fit=crop" 
+                         alt="Galería" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-church-dark/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl shadow-lg cursor-pointer gallery-item" data-src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&h=800&fit=crop">
+                    <img src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=400&h=400&fit=crop" 
+                         alt="Galería" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-church-dark/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl shadow-lg cursor-pointer gallery-item" data-src="https://images.unsplash.com/photo-1438032005730-c779502df39b?w=800&h=800&fit=crop">
+                    <img src="https://images.unsplash.com/photo-1438032005730-c779502df39b?w=400&h=400&fit=crop" 
+                         alt="Galería" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-church-dark/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonios -->
-    <section class="py-20 bg-white dark:bg-gray-800">
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <button id="closeLightbox" class="absolute top-6 right-6 text-white text-3xl hover:text-church-gold transition">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="lightboxImage" src="" alt="Imagen ampliada">
+    </div>
+
+    <!-- Testimonios Carrusel -->
+    <section class="py-20 bg-church-cream dark:bg-gray-900 overflow-hidden">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12 reveal">
                 <span class="text-church-gold font-semibold uppercase tracking-wider">Vidas transformadas</span>
                 <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-4">
                     Testimonios de <span class="gradient-text">Fe</span>
                 </h2>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl p-8 shadow-md">
-                    <i class="fas fa-quote-left text-church-gold text-3xl mb-4"></i>
-                    <p class="text-gray-700 dark:text-gray-300 mb-6 italic leading-relaxed">
-                        "Encontré en esta iglesia una familia que me ayudó en el momento más difícil de mi vida. Hoy sirvo a Dios con gozo."
-                    </p>
-                    <div class="flex items-center">
-                        <img src="https://i.pravatar.cc/50?img=5" class="w-12 h-12 rounded-full mr-4" alt="Testimonio">
-                        <div>
-                            <div class="font-bold text-church-dark dark:text-white">Ana Martínez</div>
-                            <div class="text-sm text-gray-500">Miembro desde 2020</div>
-                        </div>
+            <div class="relative max-w-4xl mx-auto">
+                <div class="overflow-hidden">
+                    <div id="testimonialTrack" class="testimonial-track flex">
+                        <!-- Testimonios generados por JS -->
                     </div>
                 </div>
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl p-8 shadow-md">
-                    <i class="fas fa-quote-left text-church-gold text-3xl mb-4"></i>
-                    <div class="flex text-church-gold mb-4">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p class="text-gray-700 dark:text-gray-300 mb-6 italic leading-relaxed">
-                        "Mi matrimonio fue restaurado gracias a los consejos y oraciones de los pastores. Dios es fiel y esta iglesia fue instrumento."
-                    </p>
-                    <div class="flex items-center">
-                        <img src="https://i.pravatar.cc/50?img=12" class="w-12 h-12 rounded-full mr-4" alt="Testimonio">
-                        <div>
-                            <div class="font-bold text-church-dark dark:text-white">Pedro y Laura Gómez</div>
-                            <div class="text-sm text-gray-500">Matrimonio restaurado</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl p-8 shadow-md">
-                    <i class="fas fa-quote-left text-church-gold text-3xl mb-4"></i>
-                    <p class="text-gray-700 dark:text-gray-300 mb-6 italic leading-relaxed">
-                        "Llegué buscando amigos y encontré hermanos en Cristo. Esta iglesia cambió mi vida para siempre. ¡Gloria a Dios!"
-                    </p>
-                    <div class="flex items-center">
-                        <img src="https://i.pravatar.cc/50?img=33" class="w-12 h-12 rounded-full mr-4" alt="Testimonio">
-                        <div>
-                            <div class="font-bold text-church-dark dark:text-white">Roberto Sánchez</div>
-                            <div class="text-sm text-gray-500">Joven adulto</div>
-                        </div>
-                    </div>
+                <div class="flex justify-center space-x-2 mt-8">
+                    <button id="prevTestimonial" class="w-12 h-12 gradient-gold rounded-full flex items-center justify-center text-white hover:scale-110 transition">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="nextTestimonial" class="w-12 h-12 gradient-gold rounded-full flex items-center justify-center text-white hover:scale-110 transition">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -782,7 +799,7 @@
         <div class="absolute inset-0 cross-pattern opacity-30"></div>
         <div class="container mx-auto px-4 relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
+                <div class="reveal">
                     <span class="text-church-gold font-semibold uppercase tracking-wider">Siembra con nosotros</span>
                     <h2 class="text-4xl md:text-5xl font-serif font-bold mt-2 mb-6">
                         Tu ofrenda <span class="gradient-text">transforma vidas</span>
@@ -791,17 +808,14 @@
                         "Cada uno dé como propuso en su corazón: no con tristeza, ni por necesidad, porque Dios ama al dador alegre."
                         <span class="block text-church-gold font-semibold mt-2">— 2 Corintios 9:7</span>
                     </p>
-                    <p class="text-gray-300 mb-8">
-                        Tus donaciones nos permiten seguir alcanzando vidas, apoyando misiones y sirviendo a nuestra comunidad. Cada semilla cuenta.
-                    </p>
                     <div class="grid grid-cols-3 gap-4">
                         <div class="text-center">
                             <div class="text-3xl font-bold text-church-gold">500+</div>
-                            <div class="text-sm text-gray-300">Familias ayudadas</div>
+                            <div class="text-sm text-gray-300">Familias</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-church-gold">15</div>
-                            <div class="text-sm text-gray-300">Misiones activas</div>
+                            <div class="text-sm text-gray-300">Misiones</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-church-gold">100%</div>
@@ -809,7 +823,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
+                <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 reveal">
                     <h3 class="text-2xl font-serif font-bold mb-6 text-center">Realiza tu donación</h3>
                     <div class="grid grid-cols-3 gap-3 mb-6">
                         <button onclick="selectAmount(10)" class="amount-btn bg-white/10 hover:bg-church-gold hover:text-white border border-white/30 py-3 rounded-xl font-bold transition">$10</button>
@@ -826,24 +840,19 @@
                         <option class="text-gray-900">Ofrenda general</option>
                         <option class="text-gray-900">Misiones</option>
                         <option class="text-gray-900">Ayuda social</option>
-                        <option class="text-gray-900">Construcción</option>
                     </select>
                     <button class="w-full gradient-gold text-white py-4 rounded-xl font-bold hover:opacity-90 transition shadow-lg">
                         <i class="fas fa-heart mr-2"></i>Donar ahora
                     </button>
-                    <div class="flex items-center justify-center mt-4 space-x-4 text-sm text-gray-300">
-                        <span><i class="fas fa-lock mr-1"></i>Pago seguro</span>
-                        <span><i class="fas fa-shield-alt mr-1"></i>100% confiable</span>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Ubicación y Contacto -->
+    <!-- Contacto -->
     <section id="contacto" class="py-20 bg-church-cream dark:bg-gray-900">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12 reveal">
                 <span class="text-church-gold font-semibold uppercase tracking-wider">Visítanos</span>
                 <h2 class="text-4xl md:text-5xl font-serif font-bold text-church-dark dark:text-white mt-2 mb-4">
                     ¿Dónde <span class="gradient-text">encontrarnos</span>?
@@ -851,78 +860,40 @@
             </div>
 
             <div class="grid lg:grid-cols-2 gap-8">
-                <!-- Mapa -->
-                <div class="rounded-2xl overflow-hidden shadow-xl h-96">
+                <div class="rounded-2xl overflow-hidden shadow-xl h-96 reveal">
                     <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.661098268361!2d-99.16869292504!3d19.42702198188!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f5bd1563%3A0x6c4d7b8a4a8b7e0!2sCiudad%20de%20M%C3%A9xico!5e0!3m2!1ses!2smx!4v1234567890"
                         width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
                     </iframe>
                 </div>
 
-                <!-- Info de contacto -->
-                <div class="space-y-6">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md flex items-start space-x-4">
-                        <div class="w-14 h-14 gradient-gold rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-map-marker-alt text-white text-xl"></i>
+                <div class="space-y-6 reveal">
+                    <form id="contactForm" class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md space-y-4">
+                        <h3 class="text-2xl font-serif font-bold text-church-dark dark:text-white mb-4">Envíanos un mensaje</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-church-dark dark:text-white mb-2">Nombre</label>
+                                <input type="text" required placeholder="Tu nombre" 
+                                       class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-church-gold focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-church-dark dark:text-white mb-2">Email</label>
+                                <input type="email" required placeholder="tu@email.com" 
+                                       class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-church-gold focus:outline-none transition">
+                            </div>
                         </div>
                         <div>
-                            <h3 class="font-bold text-church-dark dark:text-white text-lg mb-1">Dirección</h3>
-                            <p class="text-gray-600 dark:text-gray-400">Av. Principal #123<br>Col. Centro, Ciudad<br>CP 12345</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md flex items-start space-x-4">
-                        <div class="w-14 h-14 gradient-gold rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-phone text-white text-xl"></i>
+                            <label class="block text-sm font-semibold text-church-dark dark:text-white mb-2">Asunto</label>
+                            <input type="text" required placeholder="¿En qué podemos ayudarte?" 
+                                   class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-church-gold focus:outline-none transition">
                         </div>
                         <div>
-                            <h3 class="font-bold text-church-dark dark:text-white text-lg mb-1">Teléfono</h3>
-                            <p class="text-gray-600 dark:text-gray-400">+1 (234) 567-8900<br>+1 (234) 567-8901</p>
+                            <label class="block text-sm font-semibold text-church-dark dark:text-white mb-2">Mensaje</label>
+                            <textarea required rows="4" placeholder="Escribe tu mensaje..." 
+                                      class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-church-gold focus:outline-none transition resize-none"></textarea>
                         </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md flex items-start space-x-4">
-                        <div class="w-14 h-14 gradient-gold rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-envelope text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-church-dark dark:text-white text-lg mb-1">Email</h3>
-                            <p class="text-gray-600 dark:text-gray-400">info@vidanueva.org<br>pastores@vidanueva.org</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md flex items-start space-x-4">
-                        <div class="w-14 h-14 gradient-gold rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-clock text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-church-dark dark:text-white text-lg mb-1">Oficinas</h3>
-                            <p class="text-gray-600 dark:text-gray-400">Lunes a Viernes: 9:00 AM - 6:00 PM<br>Sábado: 9:00 AM - 1:00 PM</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Newsletter -->
-    <section class="py-20 bg-white dark:bg-gray-800">
-        <div class="container mx-auto px-4">
-            <div class="gradient-church rounded-3xl p-8 md:p-16 text-center relative overflow-hidden">
-                <div class="absolute inset-0 cross-pattern opacity-20"></div>
-                <div class="relative z-10 max-w-2xl mx-auto">
-                    <i class="fas fa-envelope-open-text text-church-gold text-5xl mb-6"></i>
-                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">
-                        Recibe la Palabra cada semana
-                    </h2>
-                    <p class="text-gray-300 mb-8">
-                        Suscríbete y recibe devocionales, anuncios y recursos espirituales en tu correo
-                    </p>
-                    <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                        <input type="email" placeholder="tu@email.com" 
-                               class="flex-1 px-6 py-4 rounded-full bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-church-gold">
-                        <button type="submit" class="gradient-gold text-white px-8 py-4 rounded-full font-bold hover:opacity-90 transition shadow-lg">
-                            Suscribirse
+                        <button type="submit" class="w-full gradient-gold text-white py-4 rounded-xl font-bold hover:opacity-90 transition shadow-lg">
+                            <i class="fas fa-paper-plane mr-2"></i>Enviar mensaje
                         </button>
                     </form>
                 </div>
@@ -1016,13 +987,20 @@
         <i class="fab fa-whatsapp text-white text-3xl"></i>
     </a>
 
-    <!-- Botón Oración (flotante) -->
+    <!-- Botón Oración -->
     <a href="#contacto" 
        class="fixed bottom-6 left-6 w-14 h-14 gradient-gold hover:opacity-90 rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition z-40">
         <i class="fas fa-pray text-white text-2xl"></i>
     </a>
 
     <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+        });
+
         // Dark mode
         const themeToggle = document.getElementById('themeToggle');
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -1038,14 +1016,284 @@
             document.getElementById('mobileMenu').classList.toggle('hidden');
         });
 
-        // Cerrar menú móvil al hacer click en un enlace
         document.querySelectorAll('#mobileMenu a').forEach(link => {
             link.addEventListener('click', () => {
                 document.getElementById('mobileMenu').classList.add('hidden');
             });
         });
 
-        // Donación - seleccionar monto
+        // Scroll spy
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Counter animation
+        const counters = document.querySelectorAll('.counter');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = +counter.getAttribute('data-target');
+                    const increment = target / 100;
+                    let count = 0;
+
+                    const updateCount = () => {
+                        if (count < target) {
+                            count += increment;
+                            counter.textContent = Math.ceil(count) + (target > 100 ? '+' : '');
+                            setTimeout(updateCount, 20);
+                        } else {
+                            counter.textContent = target + (target > 100 ? '+' : '');
+                        }
+                    };
+                    updateCount();
+                    counterObserver.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        // Eventos
+        const events = [
+            { title: 'Retiro Juvenil 2026', date: '15', month: 'Nov', category: 'Juventud', description: 'Tres días de renovación espiritual para jóvenes.', location: 'Centro de Retiros El Manantial', image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=400&fit=crop' },
+            { title: 'Conferencia de Familias', date: '22', month: 'Nov', category: 'Conferencia', description: 'Una noche especial para fortalecer matrimonios.', location: 'Templo Principal', image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&h=400&fit=crop' },
+            { title: 'Servicio de Bautismos', date: '01', month: 'Dic', category: 'Especial', description: 'Celebramos con quienes siguen a Cristo.', location: 'Templo Principal', image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop' }
+        ];
+
+        const eventsGrid = document.getElementById('eventsGrid');
+        eventsGrid.innerHTML = events.map(e => `
+            <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl overflow-hidden shadow-md reveal">
+                <div class="relative h-48 overflow-hidden">
+                    <img src="${e.image}" alt="${e.title}" class="w-full h-full object-cover">
+                    <div class="absolute top-4 left-4 bg-white dark:bg-gray-800 rounded-xl p-3 text-center shadow-lg">
+                        <div class="text-2xl font-bold text-church-dark dark:text-white leading-none">${e.date}</div>
+                        <div class="text-xs text-church-gold font-semibold uppercase">${e.month}</div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs bg-church-gold/20 text-church-gold px-3 py-1 rounded-full font-semibold">${e.category}</span>
+                    <h3 class="text-xl font-bold text-church-dark dark:text-white mt-3 mb-2">${e.title}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">${e.description}</p>
+                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        <i class="fas fa-map-marker-alt mr-2 text-church-gold"></i>
+                        <span>${e.location}</span>
+                    </div>
+                    <a href="#" class="text-church-gold font-semibold hover:underline">Más información →</a>
+                </div>
+            </div>
+        `).join('');
+
+        // Sermones
+                // Sermones
+        const sermons = [
+            { id: 1, title: 'Caminando en Fe', pastor: 'Pastor Juan Rodríguez', date: 'Octubre 19, 2026', duration: '45:00', image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=600&h=400&fit=crop' },
+            { id: 2, title: 'El Poder de la Oración', pastor: 'Pastora María López', date: 'Octubre 12, 2026', duration: '50:00', image: 'https://images.unsplash.com/photo-1455849318743-b2233052fcff?w=600&h=400&fit=crop' },
+            { id: 3, title: 'Amor Incondicional', pastor: 'Pastor Juan Rodríguez', date: 'Octubre 5, 2026', duration: '42:00', image: 'https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=600&h=400&fit=crop' },
+            { id: 4, title: 'Fortaleza en la Adversidad', pastor: 'Pastor Carlos Méndez', date: 'Septiembre 28, 2026', duration: '48:00', image: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=600&h=400&fit=crop' },
+            { id: 5, title: 'La Gracia que Transforma', pastor: 'Pastora María López', date: 'Septiembre 21, 2026', duration: '44:00', image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&h=400&fit=crop' },
+            { id: 6, title: 'Propósito Divino', pastor: 'Pastor Juan Rodríguez', date: 'Septiembre 14, 2026', duration: '47:00', image: 'https://images.unsplash.com/photo-1519974719765-e6559eac2575?w=600&h=400&fit=crop' }
+        ];
+
+        const sermonsGrid = document.getElementById('sermonsGrid');
+        sermonsGrid.innerHTML = sermons.map(s => `
+            <div class="card-hover bg-church-cream dark:bg-gray-900 rounded-2xl overflow-hidden shadow-md reveal">
+                <div class="relative">
+                    <img src="${s.image}" alt="${s.title}" class="w-full h-48 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-center">
+                        <button onclick="playSermon('${s.title}', '${s.pastor}')" class="w-16 h-16 bg-church-gold rounded-full flex items-center justify-center hover:scale-110 transition shadow-xl">
+                            <i class="fas fa-play text-white text-xl ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                        <i class="far fa-calendar mr-2"></i>
+                        <span>${s.date}</span>
+                        <span class="mx-2">•</span>
+                        <span>${s.duration}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-church-dark dark:text-white mb-2">${s.title}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">${s.pastor}</p>
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
+                        <button class="text-church-gold hover:text-church-goldLight transition text-sm font-semibold">
+                            <i class="fas fa-download mr-1"></i> Descargar
+                        </button>
+                        <button class="text-gray-500 hover:text-church-gold transition">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // Reproductor de audio
+        let isPlaying = false;
+        let progress = 0;
+        let progressInterval;
+
+        const playBtn = document.getElementById('playBtn');
+        const progressBar = document.getElementById('progressBar');
+        const currentTime = document.getElementById('currentTime');
+
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                playBtn.innerHTML = '<i class="fas fa-pause text-white text-xl"></i>';
+                progressInterval = setInterval(() => {
+                    progress += 0.5;
+                    if (progress >= 100) {
+                        progress = 0;
+                        isPlaying = false;
+                        playBtn.innerHTML = '<i class="fas fa-play text-white text-xl ml-1"></i>';
+                        clearInterval(progressInterval);
+                    }
+                    progressBar.style.width = progress + '%';
+                    const totalSeconds = Math.floor((progress / 100) * 2700);
+                    const minutes = Math.floor(totalSeconds / 60);
+                    const seconds = totalSeconds % 60;
+                    currentTime.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }, 500);
+            } else {
+                playBtn.innerHTML = '<i class="fas fa-play text-white text-xl ml-1"></i>';
+                clearInterval(progressInterval);
+            }
+        });
+
+        function playSermon(title, pastor) {
+            document.getElementById('currentSermonTitle').textContent = title;
+            document.querySelector('#sermones .text-sm.text-gray-300').textContent = pastor;
+            progress = 0;
+            progressBar.style.width = '0%';
+            currentTime.textContent = '0:00';
+            document.getElementById('sermones').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Blog posts
+        const blogPosts = [
+            { title: '5 Hábitos para Fortalecer tu Fe', excerpt: 'Descubre prácticas diarias que transformarán tu vida espiritual y te acercarán más a Dios.', date: '28 Oct, 2026', category: 'Devocional', image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=600&h=400&fit=crop', readTime: '5 min' },
+            { title: 'El Poder de la Oración en Familia', excerpt: 'Cómo la oración conjunta puede fortalecer los lazos familiares y traer paz al hogar.', date: '21 Oct, 2026', category: 'Familia', image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600&h=400&fit=crop', readTime: '7 min' },
+            { title: 'Encontrando Propósito en Cristo', excerpt: 'Reflexiones sobre cómo descubrir el plan que Dios tiene para tu vida.', date: '14 Oct, 2026', category: 'Reflexión', image: 'https://images.unsplash.com/photo-1455849318743-b2233052fcff?w=600&h=400&fit=crop', readTime: '6 min' }
+        ];
+
+        const blogGrid = document.getElementById('blogGrid');
+        blogGrid.innerHTML = blogPosts.map(p => `
+            <article class="blog-card card-hover bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md reveal">
+                <div class="relative overflow-hidden h-48">
+                    <img src="${p.image}" alt="${p.title}" class="blog-image w-full h-full object-cover">
+                    <span class="absolute top-4 left-4 bg-church-gold text-white text-xs font-bold px-3 py-1 rounded-full">${p.category}</span>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
+                        <i class="far fa-calendar mr-2"></i>
+                        <span>${p.date}</span>
+                        <span class="mx-2">•</span>
+                        <i class="far fa-clock mr-1"></i>
+                        <span>${p.readTime}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-church-dark dark:text-white mb-3 hover:text-church-gold transition cursor-pointer">${p.title}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">${p.excerpt}</p>
+                    <a href="#" class="text-church-gold font-semibold hover:underline text-sm">
+                        Leer más <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </article>
+        `).join('');
+
+        // Testimonios carrusel
+        const testimonials = [
+            { text: 'Encontré en esta iglesia una familia que me ayudó en el momento más difícil de mi vida. Hoy sirvo a Dios con gozo y mi vida ha sido transformada por completo.', name: 'Ana Martínez', role: 'Miembro desde 2020', image: 'https://i.pravatar.cc/80?img=5' },
+            { text: 'Mi matrimonio fue restaurado gracias a los consejos y oraciones de los pastores. Dios es fiel y esta iglesia fue instrumento de su amor en nuestras vidas.', name: 'Pedro y Laura Gómez', role: 'Matrimonio restaurado', image: 'https://i.pravatar.cc/80?img=12' },
+            { text: 'Llegué buscando amigos y encontré hermanos en Cristo. Esta iglesia cambió mi vida para siempre. ¡Gloria a Dios por este lugar!', name: 'Roberto Sánchez', role: 'Joven adulto', image: 'https://i.pravatar.cc/80?img=33' },
+            { text: 'Como madre soltera, encontré apoyo, amor y dirección. Mis hijos crecen en un ambiente de fe y los ministerios infantiles son excelentes.', name: 'Carolina Jiménez', role: 'Madre de familia', image: 'https://i.pravatar.cc/80?img=47' },
+            { text: 'Los pequeños grupos cambiaron mi perspectiva de la fe. Ahora tengo relaciones profundas y crezco espiritualmente cada semana.', name: 'Miguel Ángel Torres', role: 'Líder de grupo', image: 'https://i.pravatar.cc/80?img=52' }
+        ];
+
+        const testimonialTrack = document.getElementById('testimonialTrack');
+        let currentTestimonial = 0;
+
+        function renderTestimonials() {
+            testimonialTrack.innerHTML = testimonials.map(t => `
+                <div class="w-full flex-shrink-0 px-4">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md text-center max-w-2xl mx-auto">
+                        <i class="fas fa-quote-left text-church-gold text-4xl mb-4"></i>
+                        <p class="text-lg text-gray-700 dark:text-gray-300 mb-6 italic leading-relaxed">
+                            "${t.text}"
+                        </p>
+                        <div class="flex items-center justify-center">
+                            <img src="${t.image}" class="w-16 h-16 rounded-full mr-4 object-cover border-2 border-church-gold" alt="${t.name}">
+                            <div class="text-left">
+                                <div class="font-bold text-church-dark dark:text-white">${t.name}</div>
+                                <div class="text-sm text-church-gold">${t.role}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            updateTestimonialPosition();
+        }
+
+        function updateTestimonialPosition() {
+            testimonialTrack.style.transform = `translateX(-${currentTestimonial * 100}%)`;
+        }
+
+        document.getElementById('nextTestimonial').addEventListener('click', () => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            updateTestimonialPosition();
+        });
+
+        document.getElementById('prevTestimonial').addEventListener('click', () => {
+            currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+            updateTestimonialPosition();
+        });
+
+        // Auto-play testimonios
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            updateTestimonialPosition();
+        }, 6000);
+
+        renderTestimonials();
+
+        // Galería lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                lightboxImage.src = item.dataset.src;
+                lightbox.classList.add('active');
+            });
+        });
+
+        document.getElementById('closeLightbox').addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        // Donaciones
         function selectAmount(amount) {
             document.getElementById('customAmount').value = amount;
             document.querySelectorAll('.amount-btn').forEach(btn => {
@@ -1056,26 +1304,40 @@
             event.target.classList.add('bg-church-gold', 'text-white', 'border-church-gold');
         }
 
-        // Animación al hacer scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        // Formulario de contacto
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            showToast('¡Mensaje enviado! Te responderemos pronto 🙏');
+            e.target.reset();
+        });
 
-        const observer = new IntersectionObserver((entries) => {
+        // Toast
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-24 right-6 gradient-gold text-white px-6 py-3 rounded-full shadow-2xl z-50 animate-slide-up font-semibold';
+            toast.innerHTML = `<i class="fas fa-check-circle mr-2"></i>${msg}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Reveal on scroll
+        const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('active');
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        document.querySelectorAll('.card-hover').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            observer.observe(el);
+        document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Escape cierra lightbox
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+            }
         });
     </script>
 </body>

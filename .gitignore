@@ -1,0 +1,153 @@
+# ============================================
+# IGLESIA VIDA NUEVA - GITIGNORE
+# ============================================
+
+# Variables de entorno (NUNCA commitear secretos)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build / Distribución
+dist/
+build/
+.next/
+out/
+.cache/
+.temp/
+
+# Logs
+logs/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Temporary files
+*.tmp
+*.temp
+~*
+*.bak
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# API Keys and Secrets (por si acaso)
+*secret*
+*key*
+*password*
+*credential*
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Uploads temporales
+uploads/temp/
+uploads/tmp/
+
+# Cache
+.cache/
+.parcel-cache/
+.next/cache/
+
+# Thumbnails
+*.thumb
+*.thumbnail
+
+# Backup files
+*.backup
+*.old
+*.orig
+*.save
+
+# Debug
+debug/
+*.debug
+
+# Production secrets
+secrets/
+credentials/
+certificates/
+*.pem
+*.key
+*.crt
+
+# Package managers
+.pnp.*
+.yarn/install-state.gz
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify/
+
+# Cloudflare
+.wrangler/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+pubsub-debug.log
+
+# Storybook
+out-static/
+
+# Nuxt
+.nuxt/
+.nitro/
+
+# Vue
+*.local
+
+# React
+.eslintcache
+
+# Tailwind
+tailwind.config.js.backup
+
+# Misc
+*.map
+*.sourcemap
